@@ -1,0 +1,2600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mughal Dynasty MCQ Quiz</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Accommodate fixed elements */
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Timer Styling */
+        .timer {
+            position: fixed;          /* Fixes the position relative to the viewport */
+            top: 20px;                /* Positions 20px from the top */
+            right: 20px;              /* Positions 20px from the right */
+            font-size: 1.5rem;        /* Sets a readable font size */
+            color: #d9534f;           /* Sets the text color (red) */
+            font-weight: bold;        /* Makes the text bold */
+            z-index: 1000;            /* Ensures the timer stays above other elements */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            padding: 10px 15px;       /* Adds padding around the timer text */
+            border-radius: 5px;       /* Rounds the corners of the timer box */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adds a subtle shadow for depth */
+        }
+
+        /* Question Map Sidebar Styling */
+        .question-map {
+            position: fixed;          
+            top: 80px;                /* Positioned below the timer */
+            right: 20px;               /* Positioned on the right */
+            width: 180px;              /* Increased width to accommodate 5 columns */
+            background-color: rgba(255, 255, 255, 0.9); 
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 999;             
+            max-height: 90vh;         
+            overflow-y: auto;         
+        }
+
+        .question-map h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #007bff;
+        }
+
+        /* Update #questionLinks to Use CSS Grid */
+        #questionLinks {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 5px; /* Adjust the spacing between links as needed */
+            justify-items: center; /* Centers the links within each grid cell */
+        }
+
+        /* Adjust .question-map .question-link Styling */
+        .question-map .question-link {
+            padding: 5px 0; /* Reduces vertical padding */
+            font-size: 0.9rem; /* Slightly smaller font size for better fit */
+            width: 100%; /* Ensures the link takes the full width of the grid cell */
+            box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+            border-radius: 4px; /* Maintains rounded corners */
+            text-align: center; /* Centers the text within the link */
+            background-color: #f8f9fa;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .question-map .question-link:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Add Correct and Incorrect Classes for Highlighting */
+        .question-map .question-link.correct {
+            background-color: #28a745; /* Green background */
+            color: #fff; /* White text */
+            border-color: #28a745; /* Green border */
+        }
+
+        .question-map .question-link.incorrect {
+            background-color: #dc3545; /* Red background */
+            color: #fff; /* White text */
+            border-color: #dc3545; /* Red border */
+        }
+
+        /* Add Attempted Class for Highlighting */
+        .question-map .question-link.attempted {
+            background-color: #17a2b8; /* Blue background for attempted questions */
+            color: #fff; /* White text */
+            border-color: #17a2b8; /* Blue border */
+        }
+
+        /* Submit Button and Score Styling */
+        .question-map .submit-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .question-map .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .question-map .submit-btn:hover {
+            background-color: #218838;
+        }
+
+        .question-map .submit-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .question-map .result {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #17a2b8;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Quiz Container Styling */
+        .quiz-container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            margin-right: 200px; /* Accommodates the question map sidebar on the right */
+            margin-top: 50px;     /* Maintains spacing from the top */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .question {
+            margin-bottom: 25px;
+        }
+
+        .question p {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 8px;
+            padding: 10px 15px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .options input[type="radio"] {
+            display: none;
+        }
+
+        .options input[type="radio"]:checked + label {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .options label:hover {
+            background-color: #e6f0ff;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+
+        .submit-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 30px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            color: #17a2b8;
+        }
+
+        /* Feedback Message Styling */
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .feedback.right {
+            color: #28a745; /* Green for correct answers */
+        }
+
+        .feedback.wrong {
+            color: #dc3545; /* Red for incorrect answers */
+        }
+
+        .feedback.not-attempted {
+            color: #6c757d; /* Gray for not attempted */
+        }
+
+        /* Alert when time is low */
+        .alert {
+            animation: blink 1s steps(5, start) infinite;
+        }
+
+        @keyframes blink {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .quiz-container {
+                margin-right: 0; /* Removes right margin on small screens */
+            }
+
+            .question-map {
+                display: none; /* Hides the question map on small screens */
+            }
+
+            .toggle-question-map {
+                display: block; /* Shows toggle button on small screens */
+            }
+        }
+
+        /* Toggle Button for Question Map (Visible on Small Screens) */
+        .toggle-question-map {
+            position: fixed;
+            top: 20px;
+            right: 20px; /* Positioned on the right */
+            z-index: 1001;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: none; /* Hidden by default */
+        }
+
+        /* Active State for Question Map on Small Screens */
+        .question-map.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer Display -->
+    <div class="timer" id="timer">10:00</div>
+
+    <!-- Toggle Button for Question Map (Visible on Small Screens) -->
+    <button class="toggle-question-map" id="toggleQuestionMap">☰</button>
+
+    <!-- Question Map Sidebar -->
+    <div class="question-map" id="questionMap">
+        <h2>Question Map</h2>
+        <div id="questionLinks">
+            <!-- Question links will be injected here by JavaScript -->
+        </div>
+        <!-- Submit Button and Score Display Below the Question Links -->
+        <div class="submit-section">
+            <button type="button" class="submit-btn" id="submitBtn" onclick="checkAnswers()">Submit</button>
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="quiz-container">
+        <h1>Mughal Dynasty MCQ Quiz</h1>
+        
+        <form id="quizForm">
+            <!-- Questions will be injected here by JavaScript -->
+        </form>
+
+        <!-- Submit Button and Score Display Below the Questions List -->
+        <div class="submit-section">
+            <button type="button" class="submit-btn" id="submitBtnBelow" onclick="checkAnswers()">Submit</button>
+            <div id="resultBelow" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Declare shuffledQuestions globally
+        let shuffledQuestions = [];
+
+        // Replace the following array with your own questions
+        const questions = [
+  {
+    id: 'q1',
+    question: "The word 'Mughal' is derived from which term meaning 'Superior'?",
+    options: [
+      { text: 'Mongol', isCorrect: true },
+      { text: 'Turkish', isCorrect: false },
+      { text: 'Persian', isCorrect: false },
+      { text: 'Arabic', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q2',
+    question: 'In which year was the Mughal Empire established in India?',
+    options: [
+      { text: '1526 AD', isCorrect: true },
+      { text: '1556 AD', isCorrect: false },
+      { text: '1707 AD', isCorrect: false },
+      { text: '1857 AD', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q3',
+    question: 'Who was the founder of the Mughal Empire in India?',
+    options: [
+      { text: 'Humayun', isCorrect: false },
+      { text: 'Babur', isCorrect: true },
+      { text: 'Akbar', isCorrect: false },
+      { text: 'Sher Shah Suri', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q4',
+    question: 'Babur was a descendant of which two famous conquerors?',
+    options: [
+      { text: 'Alexander and Timur', isCorrect: false },
+      { text: 'Genghis Khan and Timur', isCorrect: true },
+      { text: 'Cyrus and Genghis Khan', isCorrect: false },
+      { text: 'Timur and Kublai Khan', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q5',
+    question: 'At what age did Babur become the ruler of Fergana?',
+    options: [
+      { text: '11 years', isCorrect: true },
+      { text: '16 years', isCorrect: false },
+      { text: '21 years', isCorrect: false },
+      { text: '25 years', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q6',
+    question: 'Which city did Babur capture in 1504 AD?',
+    options: [
+      { text: 'Kabul', isCorrect: true },
+      { text: 'Delhi', isCorrect: false },
+      { text: 'Samarkand', isCorrect: false },
+      { text: 'Kandahar', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q7',
+    question: 'What title did Babur assume in 1507 AD?',
+    options: [
+      { text: 'Sultan', isCorrect: false },
+      { text: 'Shah', isCorrect: false },
+      { text: 'Padshah', isCorrect: true },
+      { text: 'Emperor', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q8',
+    question: 'Babur first attacked India in 1519 AD, targeting which region?',
+    options: [
+      { text: 'Punjab', isCorrect: false },
+      { text: 'Bajaur', isCorrect: true },
+      { text: 'Delhi', isCorrect: false },
+      { text: 'Bengal', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q9',
+    question: 'Who was the father of Babur?',
+    options: [
+      { text: 'Umar Shaikh Mirza', isCorrect: true },
+      { text: 'Timur', isCorrect: false },
+      { text: 'Genghis Khan', isCorrect: false },
+      { text: 'Akbar', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q10',
+    question: "Who was Babur's mother, a descendant of Genghis Khan?",
+    options: [
+      { text: 'Hamida Banu Begum', isCorrect: false },
+      { text: 'Gulbadan Begum', isCorrect: false },
+      { text: 'Qutlugh Nigar Khanum', isCorrect: true },
+      { text: 'Mumtaz Mahal', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q11',
+    question: 'The First Battle of Panipat was fought in which year?',
+    options: [
+      { text: '1526 AD', isCorrect: true },
+      { text: '1527 AD', isCorrect: false },
+      { text: '1529 AD', isCorrect: false },
+      { text: '1530 AD', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q12',
+    question: 'In the First Battle of Panipat, Babur defeated which ruler?',
+    options: [
+      { text: 'Rana Sanga', isCorrect: false },
+      { text: 'Ibrahim Lodi', isCorrect: true },
+      { text: 'Medini Rai', isCorrect: false },
+      { text: 'Sher Shah Suri', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q13',
+    question: 'Which tactical formation did Babur use in the First Battle of Panipat?',
+    options: [
+      { text: 'Chakravyuh', isCorrect: false },
+      { text: 'Tulghuma', isCorrect: true },
+      { text: 'Phalanx', isCorrect: false },
+      { text: 'Guerrilla Warfare', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q14',
+    question: 'Which battle marked the end of the Delhi Sultanate?',
+    options: [
+      { text: 'Battle of Khanwa', isCorrect: false },
+      { text: 'First Battle of Panipat', isCorrect: true },
+      { text: 'Battle of Chanderi', isCorrect: false },
+      { text: 'Battle of Ghaghra', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q15',
+    question: 'After which battle did Babur distribute silver coins to the people of Kabul?',
+    options: [
+      { text: 'First Battle of Panipat', isCorrect: true },
+      { text: 'Battle of Khanwa', isCorrect: false },
+      { text: 'Battle of Chanderi', isCorrect: false },
+      { text: 'Battle of Ghaghra', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q16',
+    question: 'What title was bestowed upon Babur due to his generosity?',
+    options: [
+      { text: 'Ghazi', isCorrect: false },
+      { text: 'Qalandar', isCorrect: true },
+      { text: 'Padshah', isCorrect: false },
+      { text: 'Sultan', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q17',
+    question: 'In which battle did Babur defeat Rana Sanga of Mewar?',
+    options: [
+      { text: 'Battle of Chausa', isCorrect: false },
+      { text: 'Battle of Khanwa', isCorrect: true },
+      { text: 'Battle of Chanderi', isCorrect: false },
+      { text: 'Battle of Ghaghra', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q18',
+    question: 'Which slogan did Babur declare against Rana Sanga in the Battle of Khanwa?',
+    options: [
+      { text: 'Jihad', isCorrect: true },
+      { text: 'Swaraj', isCorrect: false },
+      { text: 'Dharma Yuddha', isCorrect: false },
+      { text: 'Crusade', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q19',
+    question: 'After the Battle of Khanwa, Babur assumed which title?',
+    options: [
+      { text: 'Sultan', isCorrect: false },
+      { text: 'Padshah', isCorrect: false },
+      { text: 'Ghazi', isCorrect: true },
+      { text: 'Shahenshah', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q20',
+    question: 'Who was defeated by Babur in the Battle of Chanderi in 1528 AD?',
+    options: [
+      { text: 'Medini Rai', isCorrect: true },
+      { text: 'Ibrahim Lodi', isCorrect: false },
+      { text: 'Rana Sanga', isCorrect: false },
+      { text: 'Mahmud Lodi', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q21',
+    question: 'The Battle of Ghaghra in 1529 AD was fought against which group?',
+    options: [
+      { text: 'Rajputs', isCorrect: false },
+      { text: 'Afghans', isCorrect: true },
+      { text: 'Marathas', isCorrect: false },
+      { text: 'British', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q22',
+    question: 'Who led the Afghan forces in the Battle of Ghaghra?',
+    options: [
+      { text: 'Sher Shah Suri', isCorrect: false },
+      { text: 'Sikandar Lodi', isCorrect: false },
+      { text: 'Mahmud Lodi', isCorrect: true },
+      { text: 'Ibrahim Lodi', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q23',
+    question: "Babur wrote his autobiography 'Baburnama' in which language?",
+    options: [
+      { text: 'Persian', isCorrect: false },
+      { text: 'Arabic', isCorrect: false },
+      { text: 'Chagatai Turkic (Turkish)', isCorrect: true },
+      { text: 'Urdu', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q24',
+    question: "Who translated 'Baburnama' into Persian?",
+    options: [
+      { text: 'Abul Fazl', isCorrect: false },
+      { text: 'Abdul Rahim Khan-i-Khanan', isCorrect: true },
+      { text: 'Gulbadan Begum', isCorrect: false },
+      { text: 'Bairam Khan', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q25',
+    question: 'Which styles is Babur considered the father of?',
+    options: [
+      { text: 'Mughal painting and architecture', isCorrect: false },
+      { text: "Mubaiyan style and 'Pad' (poetic verse) style", isCorrect: true },
+      { text: 'Persian miniature and calligraphy', isCorrect: false },
+      { text: 'Rajasthani painting and sculpture', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q26',
+    question: 'Where was Babur initially buried after his death?',
+    options: [
+      { text: 'Kabul', isCorrect: false },
+      { text: 'Agra (Aram Bagh)', isCorrect: true },
+      { text: 'Delhi', isCorrect: false },
+      { text: 'Fergana', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q27',
+    question: "Babur's body was later reinterred in which city?",
+    options: [
+      { text: 'Delhi', isCorrect: false },
+      { text: 'Kabul', isCorrect: true },
+      { text: 'Samarkand', isCorrect: false },
+      { text: 'Lahore', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q28',
+    question: 'Who succeeded Babur as the Mughal emperor?',
+    options: [
+      { text: 'Akbar', isCorrect: false },
+      { text: 'Humayun', isCorrect: true },
+      { text: 'Kamran Mirza', isCorrect: false },
+      { text: 'Sher Shah Suri', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q29',
+    question: 'Humayun ascended the throne at what age?',
+    options: [
+      { text: '20 years', isCorrect: false },
+      { text: '23 years', isCorrect: true },
+      { text: '30 years', isCorrect: false },
+      { text: '35 years', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q30',
+    question: 'Before becoming emperor, Humayun was the governor of which region?',
+    options: [
+      { text: 'Kabul', isCorrect: false },
+      { text: 'Badakhshan', isCorrect: true },
+      { text: 'Kandahar', isCorrect: false },
+      { text: 'Delhi', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q31',
+    question: 'Humayun divided his empire among his brothers according to whose instructions?',
+    options: [
+      { text: 'His father Babur', isCorrect: true },
+      { text: 'Bairam Khan', isCorrect: false },
+      { text: 'Akbar', isCorrect: false },
+      { text: 'Abdul Rahim Khan-i-Khanan', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q32',
+    question: 'Which brother of Humayun was given Sambhal to govern?',
+    options: [
+      { text: 'Kamran Mirza', isCorrect: false },
+      { text: 'Askari Mirza', isCorrect: true },
+      { text: 'Hindal Mirza', isCorrect: false },
+      { text: 'Sulaiman Mirza', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q33',
+    question: 'Humayun founded which new city in 1533 AD?',
+    options: [
+      { text: 'Fatehpur Sikri', isCorrect: false },
+      { text: 'Dinpanah', isCorrect: true },
+      { text: 'Agra', isCorrect: false },
+      { text: 'Lahore', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q34',
+    question: 'In the Battle of Chausa (1539 AD), Humayun was defeated by whom?',
+    options: [
+      { text: 'Rana Sanga', isCorrect: false },
+      { text: 'Sher Khan (Sher Shah Suri)', isCorrect: true },
+      { text: 'Ibrahim Lodi', isCorrect: false },
+      { text: 'Sikandar Shah Suri', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q35',
+    question: "After which battle did Sher Khan assume the title 'Sher Shah'?",
+    options: [
+      { text: 'Battle of Chausa', isCorrect: true },
+      { text: 'Battle of Khanwa', isCorrect: false },
+      { text: 'Battle of Ghaghra', isCorrect: false },
+      { text: 'Battle of Sirhind', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q36',
+    question: "Which battle in 1540 AD led to Humayun's exile from India?",
+    options: [
+      { text: 'Battle of Chausa', isCorrect: false },
+      { text: 'Battle of Kannauj (Bilgram)', isCorrect: true },
+      { text: 'First Battle of Panipat', isCorrect: false },
+      { text: 'Battle of Khanwa', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q37',
+    question: "Humayun married Hamida Banu Begum during his exile. Who was their famous son?",
+    options: [
+      { text: 'Akbar', isCorrect: true },
+      { text: 'Jahangir', isCorrect: false },
+      { text: 'Shah Jahan', isCorrect: false },
+      { text: 'Aurangzeb', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q38',
+    question: 'Which battle in 1555 AD allowed Humayun to regain the throne of Delhi?',
+    options: [
+      { text: 'Battle of Chausa', isCorrect: false },
+      { text: 'Battle of Sirhind', isCorrect: true },
+      { text: 'Battle of Kannauj', isCorrect: false },
+      { text: 'Second Battle of Panipat', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q39',
+    question: "Humayun's army was led by which general in the Battle of Sirhind?",
+    options: [
+      { text: 'Bairam Khan', isCorrect: true },
+      { text: 'Kamran Mirza', isCorrect: false },
+      { text: 'Akbar', isCorrect: false },
+      { text: 'Sher Shah Suri', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q40',
+    question: 'Who led the Afghan forces against Humayun in the Battle of Sirhind?',
+    options: [
+      { text: 'Sher Shah Suri', isCorrect: false },
+      { text: 'Sikandar Shah Suri', isCorrect: true },
+      { text: 'Adil Shah Suri', isCorrect: false },
+      { text: 'Ibrahim Lodi', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q41',
+    question: 'Humayun died after falling from the stairs of which building?',
+    options: [
+      { text: 'Sher Mandal', isCorrect: true },
+      { text: 'Qutub Minar', isCorrect: false },
+      { text: "Humayun's Tomb", isCorrect: false },
+      { text: 'Red Fort', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q42',
+    question: "Who wrote the biography 'Humayunnama'?",
+    options: [
+      { text: 'Gulbadan Begum', isCorrect: true },
+      { text: 'Hamida Banu Begum', isCorrect: false },
+      { text: 'Jahanara Begum', isCorrect: false },
+      { text: 'Noor Jahan', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q43',
+    question: 'Which historian commented, "Humayun tumbled through life and finally tumbled out of it"?',
+    options: [
+      { text: 'Lane-Poole', isCorrect: true },
+      { text: 'Abul Fazl', isCorrect: false },
+      { text: 'Vincent Smith', isCorrect: false },
+      { text: 'R.C. Majumdar', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q44',
+    question: "Babur's four sons were Humayun, Kamran, Askari, and whom?",
+    options: [
+      { text: 'Hindal', isCorrect: true },
+      { text: 'Akbar', isCorrect: false },
+      { text: 'Jahangir', isCorrect: false },
+      { text: 'Shah Jahan', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q45',
+    question: 'Who among the following was not a son of Babur?',
+    options: [
+      { text: 'Humayun', isCorrect: false },
+      { text: 'Kamran', isCorrect: false },
+      { text: 'Akbar', isCorrect: true },
+      { text: 'Askari', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q46',
+    question: 'The Battle of Ghaghra was fought in which year?',
+    options: [
+      { text: '1526 AD', isCorrect: false },
+      { text: '1527 AD', isCorrect: false },
+      { text: '1529 AD', isCorrect: true },
+      { text: '1530 AD', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q47',
+    question: 'Who did Babur defeat in the Battle of Khanwa?',
+    options: [
+      { text: 'Rana Sanga', isCorrect: true },
+      { text: 'Ibrahim Lodi', isCorrect: false },
+      { text: 'Sher Shah Suri', isCorrect: false },
+      { text: 'Medini Rai', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q48',
+    question: "Babur assumed the title 'Ghazi' after which battle?",
+    options: [
+      { text: 'First Battle of Panipat', isCorrect: false },
+      { text: 'Battle of Khanwa', isCorrect: true },
+      { text: 'Battle of Chanderi', isCorrect: false },
+      { text: 'Battle of Ghaghra', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q49',
+    question: 'Which battle marked the end of the Delhi Sultanate and the rise of Mughal rule in India?',
+    options: [
+      { text: 'First Battle of Panipat', isCorrect: true },
+      { text: 'Battle of Khanwa', isCorrect: false },
+      { text: 'Battle of Chausa', isCorrect: false },
+      { text: 'Battle of Kannauj', isCorrect: false },
+    ],
+  },
+  {
+    id: 'q50',
+    question: "Which Mughal emperor died in 1556 AD, leading to Akbar's succession?",
+    options: [
+      { text: 'Babur', isCorrect: false },
+      { text: 'Humayun', isCorrect: true },
+      { text: 'Jahangir', isCorrect: false },
+      { text: 'Shah Jahan', isCorrect: false },
+    ],
+  },
+  // Continue adding from q51
+{
+  id: 'q51',
+  question: 'In which palace was Emperor Akbar born in 1542 AD?',
+  options: [
+    { text: 'Palace of Raja Bharmal of Amber', isCorrect: false },
+    { text: 'Palace of Rana Sanga of Mewar', isCorrect: false },
+    { text: 'Palace of Rana Veer Sal of Amarkot', isCorrect: true },
+    { text: 'Palace of Raja Man Singh of Jaipur', isCorrect: false },
+  ],
+},
+{
+  id: 'q52',
+  question: "What was Akbar's childhood name?",
+  options: [
+    { text: 'Salim', isCorrect: false },
+    { text: 'Jalal', isCorrect: true },
+    { text: 'Humayun', isCorrect: false },
+    { text: 'Babar', isCorrect: false },
+  ],
+},
+{
+  id: 'q53',
+  question: 'In which month and year did Akbar\'s coronation take place?',
+  options: [
+    { text: 'November 1556', isCorrect: false },
+    { text: 'February 1556', isCorrect: true },
+    { text: 'June 1555', isCorrect: false },
+    { text: 'December 1557', isCorrect: false },
+  ],
+},
+{
+  id: 'q54',
+  question: 'Where was Akbar\'s coronation held?',
+  options: [
+    { text: 'Delhi', isCorrect: false },
+    { text: 'Agra', isCorrect: false },
+    { text: 'Kalanaur', isCorrect: true },
+    { text: 'Fatehpur Sikri', isCorrect: false },
+  ],
+},
+{
+  id: 'q55',
+  question: 'What title did Akbar assume upon his coronation?',
+  options: [
+    { text: 'Shahenshah Akbar the Great', isCorrect: false },
+    { text: 'Jalaluddin Muhammad Akbar Badshah Ghazi', isCorrect: true },
+    { text: 'Alamgir Akbar', isCorrect: false },
+    { text: 'Akbar-e-Azam', isCorrect: false },
+  ],
+},
+{
+  id: 'q56',
+  question: 'Who served as Akbar\'s guardian from 1556 to 1560 AD?',
+  options: [
+    { text: 'Maham Anga', isCorrect: false },
+    { text: 'Bairam Khan', isCorrect: true },
+    { text: 'Raja Todar Mal', isCorrect: false },
+    { text: 'Abul Fazl', isCorrect: false },
+  ],
+},
+{
+  id: 'q57',
+  question: 'Which battle in 1556 established Akbar\'s control over Delhi and Agra?',
+  options: [
+    { text: 'First Battle of Panipat', isCorrect: false },
+    { text: 'Second Battle of Panipat', isCorrect: true },
+    { text: 'Battle of Khanwa', isCorrect: false },
+    { text: 'Battle of Chausa', isCorrect: false },
+  ],
+},
+{
+  id: 'q58',
+  question: 'Who commanded Akbar\'s forces in the Second Battle of Panipat?',
+  options: [
+    { text: 'Bairam Khan', isCorrect: true },
+    { text: 'Man Singh', isCorrect: false },
+    { text: 'Asaf Khan', isCorrect: false },
+    { text: 'Birbal', isCorrect: false },
+  ],
+},
+{
+  id: 'q59',
+  question: 'Against whom did Akbar fight in the Second Battle of Panipat?',
+  options: [
+    { text: 'Rana Pratap', isCorrect: false },
+    { text: 'Hemu Vikramaditya', isCorrect: true },
+    { text: 'Sher Shah Suri', isCorrect: false },
+    { text: 'Ibrahim Lodi', isCorrect: false },
+  ],
+},
+{
+  id: 'q60',
+  question: 'Who was the last Hindu ruler to assume the title of Vikramaditya?',
+  options: [
+    { text: 'Shivaji', isCorrect: false },
+    { text: 'Rana Pratap', isCorrect: false },
+    { text: 'Hemu', isCorrect: true },
+    { text: 'Harsha', isCorrect: false },
+  ],
+},
+{
+  id: 'q61',
+  question: 'What was significant about Hemu in the context of Akbar\'s reign?',
+  options: [
+    { text: 'He was Akbar\'s mentor', isCorrect: false },
+    { text: 'Last Hindu ruler of Delhi', isCorrect: true },
+    { text: 'Commander of Akbar\'s army', isCorrect: false },
+    { text: 'Founder of Din-i-Ilahi', isCorrect: false },
+  ],
+},
+{
+  id: 'q62',
+  question: 'Which period of Akbar\'s reign is known as the "Petticoat Government"?',
+  options: [
+    { text: '1556–1560', isCorrect: false },
+    { text: '1560–1562', isCorrect: true },
+    { text: '1570–1575', isCorrect: false },
+    { text: '1580–1585', isCorrect: false },
+  ],
+},
+{
+  id: 'q63',
+  question: 'Who influenced the "Petticoat Government" during Akbar\'s reign?',
+  options: [
+    { text: 'His mother Hamida Banu Begum', isCorrect: false },
+    { text: 'His foster mother Maham Anga', isCorrect: true },
+    { text: 'His wife Jodha Bai', isCorrect: false },
+    { text: 'His sister Bakht-un-Nissa', isCorrect: false },
+  ],
+},
+{
+  id: 'q64',
+  question: 'The Battle of Haldighati in 1576 was fought between Akbar and which ruler?',
+  options: [
+    { text: 'Rana Sanga', isCorrect: false },
+    { text: 'Maharana Pratap', isCorrect: true },
+    { text: 'Hemu', isCorrect: false },
+    { text: 'Shivaji', isCorrect: false },
+  ],
+},
+{
+  id: 'q65',
+  question: 'Who commanded the Mughal forces in the Battle of Haldighati?',
+  options: [
+    { text: 'Bairam Khan', isCorrect: false },
+    { text: 'Raja Man Singh', isCorrect: true },
+    { text: 'Asaf Khan', isCorrect: false },
+    { text: 'Birbal', isCorrect: false },
+  ],
+},
+{
+  id: 'q66',
+  question: 'Who was the commander of Maharana Pratap\'s forces in the Battle of Haldighati?',
+  options: [
+    { text: 'Man Singh', isCorrect: false },
+    { text: 'Hakim Khan Sur', isCorrect: true },
+    { text: 'Bairam Khan', isCorrect: false },
+    { text: 'Birbal', isCorrect: false },
+  ],
+},
+{
+  id: 'q67',
+  question: 'Which Jain Acharya was given the title of \'Jagatguru\' by Akbar?',
+  options: [
+    { text: 'Harivijay Suri', isCorrect: true },
+    { text: 'Hemachandra', isCorrect: false },
+    { text: 'Vidyasagar', isCorrect: false },
+    { text: 'Bhadrabahu', isCorrect: false },
+  ],
+},
+{
+  id: 'q68',
+  question: 'Who was Akbar\'s Diwan who implemented the Dahsala settlement system in 1580 AD?',
+  options: [
+    { text: 'Raja Man Singh', isCorrect: false },
+    { text: 'Raja Todar Mal', isCorrect: true },
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Abul Fazl', isCorrect: false },
+  ],
+},
+{
+  id: 'q69',
+  question: 'Which revenue system did Raja Todar Mal implement?',
+  options: [
+    { text: 'Dahsala settlement system', isCorrect: true },
+    { text: 'Mansabdari system', isCorrect: false },
+    { text: 'Zamindari system', isCorrect: false },
+    { text: 'Ryotwari system', isCorrect: false },
+  ],
+},
+{
+  id: 'q70',
+  question: 'Who was the famous musician in Akbar\'s court known as Ramtanu Pandey?',
+  options: [
+    { text: 'Tansen', isCorrect: true },
+    { text: 'Baiju Bawra', isCorrect: false },
+    { text: 'Amir Khusrau', isCorrect: false },
+    { text: 'Swami Haridas', isCorrect: false },
+  ],
+},
+{
+  id: 'q71',
+  question: 'From which place did Tansen originate?',
+  options: [
+    { text: 'Delhi', isCorrect: false },
+    { text: 'Gwalior', isCorrect: true },
+    { text: 'Agra', isCorrect: false },
+    { text: 'Fatehpur Sikri', isCorrect: false },
+  ],
+},
+{
+  id: 'q72',
+  question: 'Who was the renowned painter in Akbar\'s court named Abdur Samad?',
+  options: [
+    { text: 'Daswant', isCorrect: false },
+    { text: 'Basawan', isCorrect: false },
+    { text: 'Abdur Samad', isCorrect: true },
+    { text: 'Mir Sayyid Ali', isCorrect: false },
+  ],
+},
+{
+  id: 'q73',
+  question: 'Name two other prominent painters in Akbar\'s court besides Abdur Samad.',
+  options: [
+    { text: 'Daswant and Basawan', isCorrect: true },
+    { text: 'Tansen and Birbal', isCorrect: false },
+    { text: 'Faizi and Abul Fazl', isCorrect: false },
+    { text: 'Mulla Do-Piyaza and Fakir Aziao-Din', isCorrect: false },
+  ],
+},
+{
+  id: 'q74',
+  question: 'What was the main feature of Akbar\'s system of governance?',
+  options: [
+    { text: 'Feudal system', isCorrect: false },
+    { text: 'Mansabdari system', isCorrect: true },
+    { text: 'Zamindari system', isCorrect: false },
+    { text: 'Jagirdari system', isCorrect: false },
+  ],
+},
+{
+  id: 'q75',
+  question: 'What does \'Mansab\' mean in the Mansabdari system?',
+  options: [
+    { text: 'Land grant', isCorrect: false },
+    { text: 'Rank', isCorrect: true },
+    { text: 'Tax', isCorrect: false },
+    { text: 'Military equipment', isCorrect: false },
+  ],
+},
+{
+  id: 'q76',
+  question: 'In which year was the Mansabdari system introduced by Akbar?',
+  options: [
+    { text: '1556', isCorrect: false },
+    { text: '1565', isCorrect: false },
+    { text: '1575', isCorrect: true },
+    { text: '1585', isCorrect: false },
+  ],
+},
+{
+  id: 'q77',
+  question: 'What are the two main ranks in the Mansabdari system?',
+  options: [
+    { text: 'Zat and Sawar', isCorrect: true },
+    { text: 'Mansab and Jagir', isCorrect: false },
+    { text: 'Sipahi and Mansabdar', isCorrect: false },
+    { text: 'Zamindar and Jagirdar', isCorrect: false },
+  ],
+},
+{
+  id: 'q78',
+  question: 'In the Mansabdari system, what does \'Zat\' represent?',
+  options: [
+    { text: 'Number of cavalry soldiers', isCorrect: false },
+    { text: 'Personal rank', isCorrect: true },
+    { text: 'Amount of land', isCorrect: false },
+    { text: 'Tax revenue', isCorrect: false },
+  ],
+},
+{
+  id: 'q79',
+  question: 'In the Mansabdari system, what does \'Sawar\' signify?',
+  options: [
+    { text: 'Number of cavalry soldiers', isCorrect: true },
+    { text: 'Personal rank', isCorrect: false },
+    { text: 'Administrative duties', isCorrect: false },
+    { text: 'Land ownership', isCorrect: false },
+  ],
+},
+{
+  id: 'q80',
+  question: 'Which category of Mansabdars had a Zat rank between 10-500?',
+  options: [
+    { text: 'Lower category', isCorrect: true },
+    { text: 'Medium category', isCorrect: false },
+    { text: 'Higher category', isCorrect: false },
+    { text: 'Elite category', isCorrect: false },
+  ],
+},
+{
+  id: 'q81',
+  question: 'Which category of Mansabdars had a Zat rank between 500-2500?',
+  options: [
+    { text: 'Lower category', isCorrect: false },
+    { text: 'Medium category', isCorrect: true },
+    { text: 'Higher category', isCorrect: false },
+    { text: 'Entry-level category', isCorrect: false },
+  ],
+},
+{
+  id: 'q82',
+  question: 'Which category of Mansabdars had a Zat rank above 2500?',
+  options: [
+    { text: 'Lower category', isCorrect: false },
+    { text: 'Medium category', isCorrect: false },
+    { text: 'Higher category', isCorrect: true },
+    { text: 'Subordinate category', isCorrect: false },
+  ],
+},
+{
+  id: 'q83',
+  question: 'What was the highest title given to a Mansabdar?',
+  options: [
+    { text: 'Amir-ul-Umara', isCorrect: true },
+    { text: 'Khan-i-Khana', isCorrect: false },
+    { text: 'Raja', isCorrect: false },
+    { text: 'Wazir', isCorrect: false },
+  ],
+},
+{
+  id: 'q84',
+  question: 'Who was Akbar\'s contemporary famous Sufi saint?',
+  options: [
+    { text: 'Sheikh Salim Chishti', isCorrect: true },
+    { text: 'Moinuddin Chishti', isCorrect: false },
+    { text: 'Nizamuddin Auliya', isCorrect: false },
+    { text: 'Baba Farid', isCorrect: false },
+  ],
+},
+{
+  id: 'q85',
+  question: 'Where is the tomb of Sheikh Salim Chishti located?',
+  options: [
+    { text: 'Agra', isCorrect: false },
+    { text: 'Fatehpur Sikri', isCorrect: true },
+    { text: 'Delhi', isCorrect: false },
+    { text: 'Ajmer', isCorrect: false },
+  ],
+},
+{
+  id: 'q86',
+  question: 'Which Mughal emperor constructed the tomb of Sheikh Salim Chishti?',
+  options: [
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Jahangir', isCorrect: false },
+    { text: 'Shah Jahan', isCorrect: false },
+    { text: 'Aurangzeb', isCorrect: false },
+  ],
+},
+{
+  id: 'q87',
+  question: 'What is significant about the tomb of Sheikh Salim Chishti?',
+  options: [
+    { text: 'First monument built with white marble by Akbar', isCorrect: true },
+    { text: 'Largest mosque in India', isCorrect: false },
+    { text: 'Built entirely of red sandstone', isCorrect: false },
+    { text: 'Contains Akbar\'s mausoleum', isCorrect: false },
+  ],
+},
+{
+  id: 'q88',
+  question: 'Which coins were issued by Akbar depicting Hindu deities?',
+  options: [
+    { text: 'Laxmi coins', isCorrect: false },
+    { text: 'Ram-Siya coins', isCorrect: true },
+    { text: 'Ganesha coins', isCorrect: false },
+    { text: 'Krishna-Radha coins', isCorrect: false },
+  ],
+},
+{
+  id: 'q89',
+  question: 'Who composed the Akbarnama?',
+  options: [
+    { text: 'Abul Fazl', isCorrect: true },
+    { text: 'Faizi', isCorrect: false },
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Todar Mal', isCorrect: false },
+  ],
+},
+{
+  id: 'q90',
+  question: 'What was Abul Fazl\'s role in the Din-i-Ilahi religion?',
+  options: [
+    { text: 'Chief priest', isCorrect: true },
+    { text: 'Founder', isCorrect: false },
+    { text: 'Opponent', isCorrect: false },
+    { text: 'Poet', isCorrect: false },
+  ],
+},
+{
+  id: 'q91',
+  question: 'Which major Hindu epics were translated into Persian during Akbar\'s reign?',
+  options: [
+    { text: 'Ramayana and Mahabharata', isCorrect: true },
+    { text: 'Bhagavad Gita and Vedas', isCorrect: false },
+    { text: 'Upanishads and Puranas', isCorrect: false },
+    { text: 'Manusmriti and Arthashastra', isCorrect: false },
+  ],
+},
+{
+  id: 'q92',
+  question: 'Who translated the Mahabharata into Persian and named it \'Razmnama\'?',
+  options: [
+    { text: 'Naqib Khan, Abdul Qadir Badauni, and Sheikh Sultan', isCorrect: true },
+    { text: 'Abul Fazl and Faizi', isCorrect: false },
+    { text: 'Todar Mal and Man Singh', isCorrect: false },
+    { text: 'Birbal and Tansen', isCorrect: false },
+  ],
+},
+{
+  id: 'q93',
+  question: 'What is the Persian name given to the Mahabharata after its translation?',
+  options: [
+    { text: 'Akbarnama', isCorrect: false },
+    { text: 'Razmnama', isCorrect: true },
+    { text: 'Ramayana', isCorrect: false },
+    { text: 'Shahnameh', isCorrect: false },
+  ],
+},
+{
+  id: 'q94',
+  question: 'Akbar\'s period is called the golden age of which literature?',
+  options: [
+    { text: 'Persian', isCorrect: false },
+    { text: 'Hindi', isCorrect: true },
+    { text: 'Urdu', isCorrect: false },
+    { text: 'Sanskrit', isCorrect: false },
+  ],
+},
+{
+  id: 'q95',
+  question: 'What was the official court language during Akbar\'s reign?',
+  options: [
+    { text: 'Hindi', isCorrect: false },
+    { text: 'Persian', isCorrect: true },
+    { text: 'Urdu', isCorrect: false },
+    { text: 'Sanskrit', isCorrect: false },
+  ],
+},
+{
+  id: 'q96',
+  question: 'Who were included in Akbar\'s Navratnas (Nine Gems)?',
+  options: [
+    { text: 'Abul Fazl, Faizi, Tansen, Birbal, Todar Mal, Raja Man Singh, Abdul Rahim Khan-i-Khana, Fakir Aziao-Din, Mulla Do-Piyaza', isCorrect: true },
+    { text: 'Bairam Khan, Maham Anga, Tansen, Birbal, Raja Man Singh, Abdur Rahim, Faizi, Abul Fazl, Todar Mal', isCorrect: false },
+    { text: 'Shah Jahan, Aurangzeb, Dara Shikoh, Jahanara, Roshanara, Murad, Shuja, Akbar II, Bahadur Shah', isCorrect: false },
+    { text: 'None of the above', isCorrect: false },
+  ],
+},
+{
+  id: 'q97',
+  question: 'Who among Akbar\'s Navratnas was a renowned musician?',
+  options: [
+    { text: 'Tansen', isCorrect: true },
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Faizi', isCorrect: false },
+    { text: 'Raja Man Singh', isCorrect: false },
+  ],
+},
+{
+  id: 'q98',
+  question: 'Who was Akbar\'s finance minister known for revenue reforms?',
+  options: [
+    { text: 'Raja Todar Mal', isCorrect: true },
+    { text: 'Raja Man Singh', isCorrect: false },
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Abdul Rahim Khan-i-Khana', isCorrect: false },
+  ],
+},
+{
+  id: 'q99',
+  question: 'Who among Akbar\'s Navratnas was known for his wit?',
+  options: [
+    { text: 'Birbal', isCorrect: true },
+    { text: 'Tansen', isCorrect: false },
+    { text: 'Faizi', isCorrect: false },
+    { text: 'Abul Fazl', isCorrect: false },
+  ],
+},
+{
+  id: 'q100',
+  question: 'Who among Akbar\'s Navratnas is sometimes considered a fictional character?',
+  options: [
+    { text: 'Mulla Do-Piyaza', isCorrect: true },
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Tansen', isCorrect: false },
+    { text: 'Raja Man Singh', isCorrect: false },
+  ],
+},
+{
+  id: 'q101',
+  question: 'Which Mughal emperor was illiterate yet a great patron of arts and learning?',
+  options: [
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Jahangir', isCorrect: false },
+    { text: 'Shah Jahan', isCorrect: false },
+    { text: 'Aurangzeb', isCorrect: false },
+  ],
+},
+{
+  id: 'q102',
+  question: 'Which emperor\'s reign is referred to as the golden age of Hindi literature?',
+  options: [
+    { text: 'Babur', isCorrect: false },
+    { text: 'Humayun', isCorrect: false },
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Jahangir', isCorrect: false },
+  ],
+},
+{
+  id: 'q103',
+  question: 'What is the third part of the Akbarnama called?',
+  options: [
+    { text: 'Baburnama', isCorrect: false },
+    { text: 'Ain-i-Akbari', isCorrect: true },
+    { text: 'Razmnama', isCorrect: false },
+    { text: 'Tuzuk-e-Jahangiri', isCorrect: false },
+  ],
+},
+{
+  id: 'q104',
+  question: 'Which Mughal emperor\'s period is documented in the Akbarnama and Ain-i-Akbari?',
+  options: [
+    { text: 'Babur', isCorrect: false },
+    { text: 'Humayun', isCorrect: false },
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Jahangir', isCorrect: false },
+  ],
+},
+{
+  id: 'q105',
+  question: 'Which emperor\'s administrative details are recorded in the Ain-i-Akbari?',
+  options: [
+    { text: 'Babur', isCorrect: false },
+    { text: 'Humayun', isCorrect: false },
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Shah Jahan', isCorrect: false },
+  ],
+},
+{
+  id: 'q106',
+  question: 'Which Mughal emperor issued coins depicting Lord Ram and Sita?',
+  options: [
+    { text: 'Babur', isCorrect: false },
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Jahangir', isCorrect: false },
+    { text: 'Aurangzeb', isCorrect: false },
+  ],
+},
+{
+  id: 'q107',
+  question: 'What were Akbar\'s coins depicting Hindu deities called?',
+  options: [
+    { text: 'Laxmi Sikke', isCorrect: false },
+    { text: 'Ram-Siya Sikke', isCorrect: true },
+    { text: 'Ganesha Sikke', isCorrect: false },
+    { text: 'Krishna-Radha Sikke', isCorrect: false },
+  ],
+},
+{
+  id: 'q108',
+  question: 'Who was the chief priest of the Din-i-Ilahi religion?',
+  options: [
+    { text: 'Abul Fazl', isCorrect: true },
+    { text: 'Faizi', isCorrect: false },
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Todar Mal', isCorrect: false },
+  ],
+},
+{
+  id: 'q109',
+  question: 'Which Mughal emperor founded the Din-i-Ilahi religion?',
+  options: [
+    { text: 'Babur', isCorrect: false },
+    { text: 'Humayun', isCorrect: false },
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Jahangir', isCorrect: false },
+  ],
+},
+{
+  id: 'q110',
+  question: 'Who among the following translated the Ramayana and Mahabharata into Persian?',
+  options: [
+    { text: 'Naqib Khan, Abdul Qadir Badauni, and Sheikh Sultan', isCorrect: true },
+    { text: 'Abul Fazl and Faizi', isCorrect: false },
+    { text: 'Todar Mal and Man Singh', isCorrect: false },
+    { text: 'Birbal and Tansen', isCorrect: false },
+  ],
+},
+{
+  id: 'q111',
+  question: 'Which emperor\'s period is called the golden age of Hindi literature?',
+  options: [
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Shah Jahan', isCorrect: false },
+    { text: 'Aurangzeb', isCorrect: false },
+    { text: 'Jahangir', isCorrect: false },
+  ],
+},
+{
+  id: 'q112',
+  question: 'Which Mughal emperor was completely illiterate?',
+  options: [
+    { text: 'Babur', isCorrect: false },
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Humayun', isCorrect: false },
+    { text: 'Jahangir', isCorrect: false },
+  ],
+},
+{
+  id: 'q113',
+  question: 'Who was the commander of Akbar\'s army during the Battle of Haldighati?',
+  options: [
+    { text: 'Man Singh', isCorrect: true },
+    { text: 'Hakim Khan Sur', isCorrect: false },
+    { text: 'Bairam Khan', isCorrect: false },
+    { text: 'Todar Mal', isCorrect: false },
+  ],
+},
+{
+  id: 'q114',
+  question: 'Which Mughal emperor started the Mansabdari system in 1575 AD?',
+  options: [
+    { text: 'Babur', isCorrect: false },
+    { text: 'Humayun', isCorrect: false },
+    { text: 'Akbar', isCorrect: true },
+    { text: 'Jahangir', isCorrect: false },
+  ],
+},
+{
+  id: 'q115',
+  question: '\'Mansab\' is a word of which language meaning \'rank\'?',
+  options: [
+    { text: 'Persian', isCorrect: false },
+    { text: 'Arabic', isCorrect: true },
+    { text: 'Turkish', isCorrect: false },
+    { text: 'Urdu', isCorrect: false },
+  ],
+},
+{
+  id: 'q116',
+  question: 'Which commander fought alongside Maharana Pratap against Akbar\'s forces?',
+  options: [
+    { text: 'Man Singh', isCorrect: false },
+    { text: 'Hakim Khan Sur', isCorrect: true },
+    { text: 'Asaf Khan', isCorrect: false },
+    { text: 'Bairam Khan', isCorrect: false },
+  ],
+},
+// End of questions
+// Continue adding from q117
+{
+  id: 'q117',
+  question: 'Razmnama is the Persian translation of which Indian epic?',
+  options: [
+    { text: 'Ramayana', isCorrect: false },
+    { text: 'Mahabharata', isCorrect: true },
+    { text: 'Panchatantra', isCorrect: false },
+    { text: 'Bhagavad Gita', isCorrect: false },
+  ],
+},
+{
+  id: 'q118',
+  question: 'Who translated the Panchatantra into Persian as "Anwar-i-Sadath"?',
+  options: [
+    { text: 'Abul Fazl', isCorrect: true },
+    { text: 'Faizi', isCorrect: false },
+    { text: 'Badauni', isCorrect: false },
+    { text: 'Abdul Rahim', isCorrect: false },
+  ],
+},
+{
+  id: 'q119',
+  question: 'Yar-i-Danish is the Persian translation of Panchatantra by whom?',
+  options: [
+    { text: 'Faizi', isCorrect: false },
+    { text: 'Nagib Khan', isCorrect: false },
+    { text: 'Maulana Hussain Faizi', isCorrect: true },
+    { text: 'Abul Fazl', isCorrect: false },
+  ],
+},
+{
+  id: 'q120',
+  question: 'Who authored the Akbarnama?',
+  options: [
+    { text: 'Abul Fazl', isCorrect: true },
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Tansen', isCorrect: false },
+    { text: 'Todar Mal', isCorrect: false },
+  ],
+},
+{
+  id: 'q121',
+  question: 'Who was the chief priest of Din-i-Ilahi?',
+  options: [
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Abul Fazl', isCorrect: true },
+    { text: 'Faizi', isCorrect: false },
+    { text: 'Badauni', isCorrect: false },
+  ],
+},
+{
+  id: 'q122',
+  question: "Akbar's reign is known as the golden age of which literature?",
+  options: [
+    { text: 'Sanskrit', isCorrect: false },
+    { text: 'Persian', isCorrect: false },
+    { text: 'Hindi', isCorrect: true },
+    { text: 'Urdu', isCorrect: false },
+  ],
+},
+{
+  id: 'q123',
+  question: 'Which monument was built by Akbar to commemorate his victory over Gujarat?',
+  options: [
+    { text: 'Buland Darwaza', isCorrect: true },
+    { text: 'Red Fort', isCorrect: false },
+    { text: 'Jama Masjid', isCorrect: false },
+    { text: "Humayun's Tomb", isCorrect: false },
+  ],
+},
+{
+  id: 'q124',
+  question: 'Buland Darwaza is located in which city?',
+  options: [
+    { text: 'Agra', isCorrect: false },
+    { text: 'Delhi', isCorrect: false },
+    { text: 'Fatehpur Sikri', isCorrect: true },
+    { text: 'Lahore', isCorrect: false },
+  ],
+},
+{
+  id: 'q125',
+  question: 'Which city was established as the Mughal capital by Akbar in 1571?',
+  options: [
+    { text: 'Delhi', isCorrect: false },
+    { text: 'Agra', isCorrect: false },
+    { text: 'Fatehpur Sikri', isCorrect: true },
+    { text: 'Lahore', isCorrect: false },
+  ],
+},
+{
+  id: 'q126',
+  question: 'Which five-storey palace at Fatehpur Sikri was inspired by Buddhist architecture?',
+  options: [
+    { text: 'Diwan-e-Khas', isCorrect: false },
+    { text: 'Panch Mahal', isCorrect: true },
+    { text: 'Ibadat Khana', isCorrect: false },
+    { text: "Jodha Bai's Palace", isCorrect: false },
+  ],
+},
+{
+  id: 'q127',
+  question: 'What was built in 1575 for interfaith dialogues in Fatehpur Sikri?',
+  options: [
+    { text: 'Buland Darwaza', isCorrect: false },
+    { text: 'Ibadat Khana', isCorrect: true },
+    { text: 'Diwan-e-Aam', isCorrect: false },
+    { text: 'Moti Masjid', isCorrect: false },
+  ],
+},
+{
+  id: 'q128',
+  question: 'Which fort built by Akbar houses the Diwan-e-Khas and Diwan-e-Aam?',
+  options: [
+    { text: 'Agra Fort', isCorrect: true },
+    { text: 'Red Fort', isCorrect: false },
+    { text: 'Lahore Fort', isCorrect: false },
+    { text: 'Allahabad Fort', isCorrect: false },
+  ],
+},
+{
+  id: 'q129',
+  question: 'Agra Fort is recognized by UNESCO as a what?',
+  options: [
+    { text: 'National Monument', isCorrect: false },
+    { text: 'Cultural Heritage', isCorrect: false },
+    { text: 'World Heritage Site', isCorrect: true },
+    { text: 'Historical Museum', isCorrect: false },
+  ],
+},
+{
+  id: 'q130',
+  question: "Who commissioned Humayun's Tomb in Delhi?",
+  options: [
+    { text: 'Akbar', isCorrect: false },
+    { text: 'Hamida Banu Begum', isCorrect: true },
+    { text: 'Jahangir', isCorrect: false },
+    { text: 'Shah Jahan', isCorrect: false },
+  ],
+},
+{
+  id: 'q131',
+  question: "Humayun's Tomb was built in which architectural style?",
+  options: [
+    { text: 'Dravidian', isCorrect: false },
+    { text: 'Indo-Saracenic', isCorrect: false },
+    { text: 'Charbagh', isCorrect: true },
+    { text: 'Gothic', isCorrect: false },
+  ],
+},
+{
+  id: 'q132',
+  question: "Which Mughal emperor's tomb was the first garden-tomb in India?",
+  options: [
+    { text: 'Babur', isCorrect: false },
+    { text: 'Humayun', isCorrect: true },
+    { text: 'Akbar', isCorrect: false },
+    { text: 'Shah Jahan', isCorrect: false },
+  ],
+},
+{
+  id: 'q133',
+  question: 'In which year did Akbar abolish slavery?',
+  options: [
+    { text: '1562', isCorrect: true },
+    { text: '1563', isCorrect: false },
+    { text: '1564', isCorrect: false },
+    { text: '1565', isCorrect: false },
+  ],
+},
+{
+  id: 'q134',
+  question: 'Which tax did Akbar abolish in 1563?',
+  options: [
+    { text: 'Jizya', isCorrect: false },
+    { text: 'Pilgrimage Tax', isCorrect: true },
+    { text: 'Land Revenue', isCorrect: false },
+    { text: 'Trade Tax', isCorrect: false },
+  ],
+},
+{
+  id: 'q135',
+  question: 'Akbar abolished Jizya tax in which year?',
+  options: [
+    { text: '1562', isCorrect: false },
+    { text: '1563', isCorrect: false },
+    { text: '1564', isCorrect: true },
+    { text: '1565', isCorrect: false },
+  ],
+},
+{
+  id: 'q136',
+  question: 'What revenue system was introduced by Akbar in 1582?',
+  options: [
+    { text: 'Mansabdari System', isCorrect: false },
+    { text: 'Dahsala System', isCorrect: true },
+    { text: 'Zamindari System', isCorrect: false },
+    { text: 'Ryotwari System', isCorrect: false },
+  ],
+},
+{
+  id: 'q137',
+  question: 'Who devised the Dahsala system?',
+  options: [
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Abul Fazl', isCorrect: false },
+    { text: 'Raja Todar Mal', isCorrect: true },
+    { text: 'Tansen', isCorrect: false },
+  ],
+},
+{
+  id: 'q138',
+  question: 'Which syncretic religion was established by Akbar in 1582?',
+  options: [
+    { text: 'Islam', isCorrect: false },
+    { text: 'Sikhism', isCorrect: false },
+    { text: 'Din-i-Ilahi', isCorrect: true },
+    { text: 'Zoroastrianism', isCorrect: false },
+  ],
+},
+{
+  id: 'q139',
+  question: 'Name a notable follower of Din-i-Ilahi.',
+  options: [
+    { text: 'Tansen', isCorrect: false },
+    { text: 'Birbal', isCorrect: true },
+    { text: 'Badauni', isCorrect: false },
+    { text: 'Faizi', isCorrect: false },
+  ],
+},
+{
+  id: 'q140',
+  question: 'To which city did Akbar shift his capital in 1585?',
+  options: [
+    { text: 'Agra', isCorrect: false },
+    { text: 'Delhi', isCorrect: false },
+    { text: 'Lahore', isCorrect: true },
+    { text: 'Fatehpur Sikri', isCorrect: false },
+  ],
+},
+{
+  id: 'q141',
+  question: "The Second Battle of Panipat was fought between Akbar's forces and whom?",
+  options: [
+    { text: 'Rana Pratap', isCorrect: false },
+    { text: 'Hemu', isCorrect: true },
+    { text: 'Sher Shah', isCorrect: false },
+    { text: 'Ibrahim Lodi', isCorrect: false },
+  ],
+},
+{
+  id: 'q142',
+  question: "Who led Akbar's forces in the Second Battle of Panipat?",
+  options: [
+    { text: 'Bairam Khan', isCorrect: true },
+    { text: 'Man Singh', isCorrect: false },
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Todar Mal', isCorrect: false },
+  ],
+},
+{
+  id: 'q143',
+  question: 'The Battle of Haldighati was fought in which year?',
+  options: [
+    { text: '1575', isCorrect: false },
+    { text: '1576', isCorrect: true },
+    { text: '1577', isCorrect: false },
+    { text: '1578', isCorrect: false },
+  ],
+},
+{
+  id: 'q144',
+  question: "Who was Akbar's opponent in the Battle of Haldighati?",
+  options: [
+    { text: 'Rana Sanga', isCorrect: false },
+    { text: 'Rana Pratap Singh', isCorrect: true },
+    { text: 'Hemu', isCorrect: false },
+    { text: 'Sher Shah', isCorrect: false },
+  ],
+},
+{
+  id: 'q145',
+  question: 'The Mughal Empire under Akbar was divided into how many provinces?',
+  options: [
+    { text: '12', isCorrect: false },
+    { text: '15', isCorrect: true },
+    { text: '18', isCorrect: false },
+    { text: '20', isCorrect: false },
+  ],
+},
+{
+  id: 'q146',
+  question: 'Provinces under Akbar were called what?',
+  options: [
+    { text: 'Sarkars', isCorrect: false },
+    { text: 'Subahs', isCorrect: true },
+    { text: 'Parganas', isCorrect: false },
+    { text: 'Jagirs', isCorrect: false },
+  ],
+},
+{
+  id: 'q147',
+  question: 'Who governed the Subahs in Akbar\'s administration?',
+  options: [
+    { text: 'Faujdars', isCorrect: false },
+    { text: 'Mansabdars', isCorrect: false },
+    { text: 'Subedars', isCorrect: true },
+    { text: 'Zamindars', isCorrect: false },
+  ],
+},
+{
+  id: 'q148',
+  question: 'Districts in Akbar\'s administration were known as what?',
+  options: [
+    { text: 'Subahs', isCorrect: false },
+    { text: 'Parganas', isCorrect: false },
+    { text: 'Sarkars', isCorrect: true },
+    { text: 'Tehsils', isCorrect: false },
+  ],
+},
+{
+  id: 'q149',
+  question: 'Who managed the Sarkars?',
+  options: [
+    { text: 'Shikdars', isCorrect: false },
+    { text: 'Faujdars', isCorrect: true },
+    { text: 'Subedars', isCorrect: false },
+    { text: 'Kotwals', isCorrect: false },
+  ],
+},
+{
+  id: 'q150',
+  question: 'Tehsils were called what in Akbar\'s administration?',
+  options: [
+    { text: 'Parganas', isCorrect: true },
+    { text: 'Villages', isCorrect: false },
+    { text: 'Sarkars', isCorrect: false },
+    { text: 'Subahs', isCorrect: false },
+  ],
+},
+// Continue adding the rest of the questions in ascending order
+// Continue adding from q151
+{
+  id: 'q151',
+  question: 'Name any local leader who administered villages under Akbar.',
+  options: [
+    { text: 'Mukaddam', isCorrect: true },
+    { text: 'Mansabdar', isCorrect: false },
+    { text: 'Subedar', isCorrect: false },
+    { text: 'Faujdar', isCorrect: false },
+  ],
+},
+{
+  id: 'q152',
+  question: "What was Birbal's real name?",
+  options: [
+    { text: 'Mahesh Das', isCorrect: true },
+    { text: 'Tansen', isCorrect: false },
+    { text: 'Abdul Fazl', isCorrect: false },
+    { text: 'Raja Ram', isCorrect: false },
+  ],
+},
+{
+  id: 'q153',
+  question: "Tansen's tomb is located in which city?",
+  options: [
+    { text: 'Agra', isCorrect: false },
+    { text: 'Gwalior', isCorrect: true },
+    { text: 'Delhi', isCorrect: false },
+    { text: 'Fatehpur Sikri', isCorrect: false },
+  ],
+},
+{
+  id: 'q154',
+  question: "Who was Akbar's finance minister who reformed the land revenue system?",
+  options: [
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Raja Todar Mal', isCorrect: true },
+    { text: 'Abul Fazl', isCorrect: false },
+    { text: 'Man Singh', isCorrect: false },
+  ],
+},
+{
+  id: 'q155',
+  question: 'Which court painters advanced Mughal miniature painting?',
+  options: [
+    { text: 'Daswant and Basawan', isCorrect: true },
+    { text: 'Tansen and Birbal', isCorrect: false },
+    { text: 'Abul Fazl and Faizi', isCorrect: false },
+    { text: 'Badauni and Faizi', isCorrect: false },
+  ],
+},
+{
+  id: 'q156',
+  question: "Who was bestowed with the title 'Zarrin Qalam' (Golden Pen)?",
+  options: [
+    { text: 'Abul Fazl', isCorrect: false },
+    { text: 'Mohammad Hussain', isCorrect: true },
+    { text: 'Faizi', isCorrect: false },
+    { text: 'Abdul Rahim', isCorrect: false },
+  ],
+},
+{
+  id: 'q157',
+  question: 'Who composed poetry in Hindi and Persian and was a military commander in Akbar\'s court?',
+  options: [
+    { text: 'Birbal', isCorrect: false },
+    { text: 'Abdul Rahim Khan-i-Khanan', isCorrect: true },
+    { text: 'Tansen', isCorrect: false },
+    { text: 'Badauni', isCorrect: false },
+  ],
+},
+{
+  id: 'q158',
+  question: 'What was the official court language during Akbar\'s reign?',
+  options: [
+    { text: 'Urdu', isCorrect: false },
+    { text: 'Persian', isCorrect: true },
+    { text: 'Arabic', isCorrect: false },
+    { text: 'Hindi', isCorrect: false },
+  ],
+},
+{
+  id: 'q159',
+  question: 'In which year did Akbar die?',
+  options: [
+    { text: '1603', isCorrect: false },
+    { text: '1605', isCorrect: true },
+    { text: '1607', isCorrect: false },
+    { text: '1609', isCorrect: false },
+  ],
+},
+{
+  id: 'q160',
+  question: 'Where was Akbar buried?',
+  options: [
+    { text: 'Delhi', isCorrect: false },
+    { text: 'Agra', isCorrect: false },
+    { text: 'Sikandra', isCorrect: true },
+    { text: 'Fatehpur Sikri', isCorrect: false },
+  ],
+},
+{
+  id: 'q161',
+  question: "Akbar's mausoleum reflects a blend of which architectural styles?",
+  options: [
+    { text: 'Gothic and Islamic', isCorrect: false },
+    { text: 'Islamic and Hindu', isCorrect: true },
+    { text: 'Persian and European', isCorrect: false },
+    { text: 'Dravidian and Mughal', isCorrect: false },
+  ],
+},
+{
+  id: 'q162',
+  question: 'In which year did Akbar ascend the throne?',
+  options: [
+    { text: '1555', isCorrect: false },
+    { text: '1556', isCorrect: true },
+    { text: '1557', isCorrect: false },
+    { text: '1558', isCorrect: false },
+  ],
+},
+{
+  id: 'q163',
+  question: 'When did Akbar establish Fatehpur Sikri as the capital?',
+  options: [
+    { text: '1569', isCorrect: false },
+    { text: '1571', isCorrect: true },
+    { text: '1573', isCorrect: false },
+    { text: '1575', isCorrect: false },
+  ],
+},
+{
+  id: 'q164',
+  question: 'When did Akbar build the Ibadat Khana?',
+  options: [
+    { text: '1575', isCorrect: true },
+    { text: '1577', isCorrect: false },
+    { text: '1579', isCorrect: false },
+    { text: '1581', isCorrect: false },
+  ],
+},
+{
+  id: 'q165',
+  question: 'Who succeeded Akbar after his death?',
+  options: [
+    { text: 'Shah Jahan', isCorrect: false },
+    { text: 'Jahangir', isCorrect: true },
+    { text: 'Aurangzeb', isCorrect: false },
+    { text: 'Humayun', isCorrect: false },
+  ],
+},
+{
+  id: 'q166',
+  question: 'Which document enhancing imperial authority over religious matters was issued by Akbar in 1579?',
+  options: [
+    { text: 'Mahzar', isCorrect: true },
+    { text: 'Mansabdari', isCorrect: false },
+    { text: 'Ain-i-Akbari', isCorrect: false },
+    { text: 'Farman', isCorrect: false },
+  ],
+},
+{
+  id: 'q167',
+  question: 'What practice related to garden design started during Akbar\'s reign?',
+  options: [
+    { text: 'Rock gardens', isCorrect: false },
+    { text: 'Charbagh style', isCorrect: true },
+    { text: 'Bonsai cultivation', isCorrect: false },
+    { text: 'Terrace farming', isCorrect: false },
+  ],
+},
+{
+  id: 'q168',
+  question: 'Which fort did Akbar build at the confluence of the Ganges and Yamuna rivers?',
+  options: [
+    { text: 'Agra Fort', isCorrect: false },
+    { text: 'Allahabad Fort', isCorrect: true },
+    { text: 'Red Fort', isCorrect: false },
+    { text: 'Lahore Fort', isCorrect: false },
+  ],
+},
+{
+  id: 'q169',
+  question: 'Which fort was expanded during Akbar\'s reign and showcases intricate designs?',
+  options: [
+    { text: 'Agra Fort', isCorrect: false },
+    { text: 'Red Fort', isCorrect: false },
+    { text: 'Lahore Fort', isCorrect: true },
+    { text: 'Gwalior Fort', isCorrect: false },
+  ],
+},
+{
+  id: 'q170',
+  question: 'Who were the translators of the Mahabharata into Persian besides Abul Fazl?',
+  options: [
+    { text: 'Nagib Khan, Abdul Qadir Badauni, and Sheikh Sultan', isCorrect: true },
+    { text: 'Faizi, Birbal, and Tansen', isCorrect: false },
+    { text: 'Bairam Khan, Man Singh, and Todar Mal', isCorrect: false },
+    { text: 'Daswant, Basawan, and Mohammad Hussain', isCorrect: false },
+  ],
+},
+{
+  id: 'q171',
+  question: 'In which battle did Akbar\'s forces defeat Hemu on November 5, 1556?',
+  options: [
+    { text: 'First Battle of Panipat', isCorrect: false },
+    { text: 'Second Battle of Panipat', isCorrect: true },
+    { text: 'Battle of Haldighati', isCorrect: false },
+    { text: 'Battle of Khanwa', isCorrect: false },
+  ],
+},
+{
+  id: 'q172',
+  question: 'Who was Akbar\'s mother who commissioned Humayun\'s Tomb?',
+  options: [
+    { text: 'Mariam-uz-Zamani', isCorrect: false },
+    { text: 'Hamida Banu Begum', isCorrect: true },
+    { text: 'Jodha Bai', isCorrect: false },
+    { text: 'Ruqaiya Sultan Begum', isCorrect: false },
+  ],
+},
+{
+  id: 'q173',
+  question: 'When did Akbar begin the Ilahi Samvat (Divine Era)?',
+  options: [
+    { text: '1579', isCorrect: false },
+    { text: '1582', isCorrect: false },
+    { text: '1583', isCorrect: true },
+    { text: '1585', isCorrect: false },
+  ],
+},
+{
+  id: 'q174',
+  question: 'Which practice did Akbar abolish in 1562, marking a significant social reform?',
+  options: [
+    { text: 'Child marriage', isCorrect: false },
+    { text: 'Slavery', isCorrect: true },
+    { text: 'Sati', isCorrect: false },
+    { text: 'Untouchability', isCorrect: false },
+  ],
+},
+{
+  id: 'q175',
+  question: 'What is the significance of the Mahzar issued by Akbar?',
+  options: [
+    { text: 'It declared Akbar as the supreme authority in religious matters.', isCorrect: true },
+    { text: 'It introduced a new revenue system.', isCorrect: false },
+    { text: 'It was a treaty with Rajput rulers.', isCorrect: false },
+    { text: 'It established Persian as the court language.', isCorrect: false },
+  ],
+},
+{
+  id: 'q176',
+  question: 'Who succeeded Akbar to the Mughal throne in 1605 AD?',
+  options: [
+    { text: 'Shah Jahan', isCorrect: false },
+    { text: 'Jahangir', isCorrect: true },
+    { text: 'Aurangzeb', isCorrect: false },
+    { text: 'Humayun', isCorrect: false },
+  ],
+},
+{
+  id: 'q177',
+  question: "What was Jahangir's birth name?",
+  options: [
+    { text: 'Salim', isCorrect: true },
+    { text: 'Khurram', isCorrect: false },
+    { text: 'Dara Shikoh', isCorrect: false },
+    { text: 'Parvez', isCorrect: false },
+  ],
+},
+{
+  id: 'q178',
+  question: "Who was Jahangir's mother?",
+  options: [
+    { text: 'Nur Jahan', isCorrect: false },
+    { text: 'Mariam-uz-Zamani', isCorrect: true },
+    { text: 'Mumtaz Mahal', isCorrect: false },
+    { text: 'Jagat Gosain', isCorrect: false },
+  ],
+},
+{
+  id: 'q179',
+  question: 'By what nickname did Akbar affectionately call his son Salim?',
+  options: [
+    { text: 'Shekhu Baba', isCorrect: true },
+    { text: 'Khurram', isCorrect: false },
+    { text: 'Shehzada', isCorrect: false },
+    { text: 'Badshah', isCorrect: false },
+  ],
+},
+{
+  id: 'q180',
+  question: 'Jahangir was named after which Sufi saint?',
+  options: [
+    { text: 'Sheikh Salim Chishti', isCorrect: true },
+    { text: 'Khwaja Moinuddin Chishti', isCorrect: false },
+    { text: 'Nizamuddin Auliya', isCorrect: false },
+    { text: 'Baba Farid', isCorrect: false },
+  ],
+},
+{
+  id: 'q181',
+  question: "Who was Jahangir's tutor?",
+  options: [
+    { text: 'Abdur Rahim Khan-i-Khanan', isCorrect: true },
+    { text: 'Mirza Ghiyas Beg', isCorrect: false },
+    { text: 'Bairam Khan', isCorrect: false },
+    { text: 'Abdul Latif', isCorrect: false },
+  ],
+},
+{
+  id: 'q182',
+  question: 'Which title did Jahangir assume upon his accession?',
+  options: [
+    { text: 'Alamgir', isCorrect: false },
+    { text: 'Nooruddin Muhammad Jahangir Badshah Ghazi', isCorrect: true },
+    { text: 'Akbar II', isCorrect: false },
+    { text: 'Shah Jahan', isCorrect: false },
+  ],
+},
+{
+  id: 'q183',
+  question: 'Who was given the title "Shah Begum" by Salim?',
+  options: [
+    { text: 'Jagat Gosain', isCorrect: false },
+    { text: 'Man Bai', isCorrect: true },
+    { text: 'Nur Jahan', isCorrect: false },
+    { text: 'Mumtaz Mahal', isCorrect: false },
+  ],
+},
+{
+  id: 'q184',
+  question: 'Who was the mother of Khurram (later Shah Jahan)?',
+  options: [
+    { text: 'Man Bai', isCorrect: false },
+    { text: 'Nur Jahan', isCorrect: false },
+    { text: 'Jagat Gosain', isCorrect: true },
+    { text: 'Mariam-uz-Zamani', isCorrect: false },
+  ],
+},
+{
+  id: 'q185',
+  question: 'How many sons did Jahangir have?',
+  options: [
+    { text: 'Three', isCorrect: false },
+    { text: 'Five', isCorrect: false },
+    { text: 'Four', isCorrect: true },
+    { text: 'Six', isCorrect: false },
+  ],
+},
+{
+  id: 'q186',
+  question: 'Which of the following was NOT a son of Jahangir?',
+  options: [
+    { text: 'Khusrau', isCorrect: false },
+    { text: 'Dara Shikoh', isCorrect: true },
+    { text: 'Khurram', isCorrect: false },
+    { text: 'Shahryar', isCorrect: false },
+  ],
+},
+{
+  id: 'q187',
+  question: 'How many bells did Jahangir\'s Chain of Justice have?',
+  options: [
+    { text: '40', isCorrect: false },
+    { text: '50', isCorrect: true },
+    { text: '60', isCorrect: false },
+    { text: '70', isCorrect: false },
+  ],
+},
+{
+  id: 'q188',
+  question: 'Jahangir\'s Chain of Justice connected the Shah Burj of Agra Fort to what?',
+  options: [
+    { text: 'A mosque', isCorrect: false },
+    { text: 'A stone pillar on the banks of the Yamuna River', isCorrect: true },
+    { text: 'The Diwan-i-Aam', isCorrect: false },
+    { text: 'The Jharokha', isCorrect: false },
+  ],
+},
+{
+  id: 'q189',
+  question: 'Jahangir\'s autobiography is known as?',
+  options: [
+    { text: 'Akbarnama', isCorrect: false },
+    { text: 'Tuzuk-e-Jahangiri', isCorrect: true },
+    { text: 'Baburnama', isCorrect: false },
+    { text: 'Humayun-nama', isCorrect: false },
+  ],
+},
+{
+  id: 'q190',
+  question: 'Who completed the writing of "Tuzuk-e-Jahangiri"?',
+  options: [
+    { text: 'Abul Fazl', isCorrect: false },
+    { text: 'Mutamad Khan', isCorrect: true },
+    { text: 'Abdul Hamid Lahori', isCorrect: false },
+    { text: 'Gulbadan Begum', isCorrect: false },
+  ],
+},
+{
+  id: 'q191',
+  question: 'In which year did Jahangir sign a treaty with Rana Amar Singh of Mewar?',
+  options: [
+    { text: '1615 AD', isCorrect: true },
+    { text: '1606 AD', isCorrect: false },
+    { text: '1620 AD', isCorrect: false },
+    { text: '1610 AD', isCorrect: false },
+  ],
+},
+{
+  id: 'q192',
+  question: 'Which Sikh Guru was executed by Jahangir in 1606 AD?',
+  options: [
+    { text: 'Guru Arjan Dev', isCorrect: true },
+    { text: 'Guru Tegh Bahadur', isCorrect: false },
+    { text: 'Guru Hargobind', isCorrect: false },
+    { text: 'Guru Gobind Singh', isCorrect: false },
+  ],
+},
+{
+  id: 'q193',
+  question: 'Jahangir conferred the title "Shah Jahan" on which prince?',
+  options: [
+    { text: 'Khusrau', isCorrect: false },
+    { text: 'Khurram', isCorrect: true },
+    { text: 'Shahryar', isCorrect: false },
+    { text: 'Parvez', isCorrect: false },
+  ],
+},
+{
+  id: 'q194',
+  question: 'The battle between Khusrau and Jahangir\'s forces took place at which location?',
+  options: [
+    { text: 'Haldighati', isCorrect: false },
+    { text: 'Bhairowal near Jalandhar', isCorrect: true },
+    { text: 'Panipat', isCorrect: false },
+    { text: 'Khanwa', isCorrect: false },
+  ],
+},
+{
+  id: 'q195',
+  question: 'Which art form reached its zenith during Jahangir\'s reign?',
+  options: [
+    { text: 'Architecture', isCorrect: false },
+    { text: 'Music', isCorrect: false },
+    { text: 'Painting', isCorrect: true },
+    { text: 'Sculpture', isCorrect: false },
+  ],
+},
+{
+  id: 'q196',
+  question: 'Jahangir\'s reign is considered the golden period of which art?',
+  options: [
+    { text: 'Mughal painting', isCorrect: true },
+    { text: 'Mughal architecture', isCorrect: false },
+    { text: 'Mughal music', isCorrect: false },
+    { text: 'Mughal literature', isCorrect: false },
+  ],
+},
+{
+  id: 'q197',
+  question: 'Which Mughal emperor established Shalimar Bagh in Kashmir?',
+  options: [
+    { text: 'Akbar', isCorrect: false },
+    { text: 'Jahangir', isCorrect: true },
+    { text: 'Shah Jahan', isCorrect: false },
+    { text: 'Aurangzeb', isCorrect: false },
+  ],
+},
+{
+  id: 'q198',
+  question: 'Who was the first Englishman to visit Jahangir\'s court?',
+  options: [
+    { text: 'Sir Thomas Roe', isCorrect: false },
+    { text: 'Captain William Hawkins', isCorrect: true },
+    { text: 'William Finch', isCorrect: false },
+    { text: 'Edward Terry', isCorrect: false },
+  ],
+},
+{
+  id: 'q199',
+  question: 'Which title did Jahangir confer upon Captain William Hawkins?',
+  options: [
+    { text: 'English Khan', isCorrect: true },
+    { text: 'Khan-i-Khanan', isCorrect: false },
+    { text: 'Khan Bahadur', isCorrect: false },
+    { text: 'Mirza', isCorrect: false },
+  ],
+},
+{
+  id: 'q200',
+  question: 'Which European ambassador visited Jahangir\'s court between 1615–1619 AD?',
+  options: [
+    { text: 'Captain William Hawkins', isCorrect: false },
+    { text: 'Sir Thomas Roe', isCorrect: true },
+    { text: 'Edward Terry', isCorrect: false },
+    { text: 'Ralph Fitch', isCorrect: false },
+  ],
+},
+// End of questions
+
+];
+
+
+
+
+        // Function to shuffle an array using Fisher-Yates algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Function to render the questions dynamically
+        function renderQuestions() {
+            const quizForm = document.getElementById('quizForm');
+            const questionsArray = getQuestions(); // Retrieve the questions array
+            if (!questionsArray || !Array.isArray(questionsArray) || questionsArray.length < 25) {
+                quizForm.innerHTML = '<p>Insufficient questions available. Please ensure there are at least 25 questions in the questions array.</p>';
+                return;
+            }
+
+            // Randomly select 25 questions from the available questions
+            const selectedQuestions = getRandomQuestions(questionsArray, 25);
+
+            // Assign shuffledQuestions to the global variable
+            shuffledQuestions = shuffleArray([...selectedQuestions]); // Create a copy and shuffle
+
+            shuffledQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                questionDiv.id = `question-${index + 1}`; // Assign unique ID
+
+                // Question text
+                const questionText = document.createElement('p');
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                questionDiv.appendChild(questionText);
+
+                // Options
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('options');
+
+                // Shuffle options and assign back to q.options
+                q.options = shuffleArray([...q.options]);
+                const shuffledOptions = q.options;
+
+                // Assign labels A, B, C, D dynamically
+                const labels = ['A', 'B', 'C', 'D'];
+
+                shuffledOptions.forEach((option, optIndex) => {
+                    const optionId = `${q.id}_option${optIndex + 1}`; // Unique ID for each option
+
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.id = optionId;
+                    radioInput.name = q.id;
+                    radioInput.value = labels[optIndex]; // Assign label as value
+
+                    const label = document.createElement('label');
+                    label.htmlFor = optionId;
+                    label.textContent = `${labels[optIndex]}) ${option.text}`;
+
+                    optionsDiv.appendChild(radioInput);
+                    optionsDiv.appendChild(label);
+
+                    // Add Attempted Class when an option is selected
+                    radioInput.addEventListener('change', function() {
+                        const questionMapLink = document.querySelector(`.question-map .question-link[href="#question-${index + 1}"]`);
+                        if (questionMapLink && !questionMapLink.classList.contains('correct') && !questionMapLink.classList.contains('incorrect')) {
+                            questionMapLink.classList.add('attempted');
+                        }
+                    });
+                });
+
+                questionDiv.appendChild(optionsDiv);
+
+                // Add Feedback Div Below Options
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.classList.add('feedback');
+                feedbackDiv.id = `feedback-${index + 1}`; // Unique ID for each feedback div
+                questionDiv.appendChild(feedbackDiv);
+
+                quizForm.appendChild(questionDiv);
+            });
+
+            generateQuestionMap(shuffledQuestions.length);
+        }
+
+        // Function to retrieve the questions array
+        function getQuestions() {
+            // Replace this with your actual questions array
+            return questions; // Assuming 'questions' is defined globally
+        }
+
+        // Function to randomly select n questions from the questions array
+        function getRandomQuestions(questionsArray, n) {
+            const shuffled = shuffleArray([...questionsArray]);
+            return shuffled.slice(0, n);
+        }
+
+        // Function to generate the Question Map links
+        function generateQuestionMap(totalQuestions) {
+            const questionLinksDiv = document.getElementById('questionLinks');
+            questionLinksDiv.innerHTML = ''; // Clear any existing links
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const link = document.createElement('a');
+                link.href = `#question-${i}`;
+                link.classList.add('question-link');
+                link.textContent = `Q${i}`;
+
+                questionLinksDiv.appendChild(link);
+            }
+        }
+
+        // Timer Functionality
+        function startTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            const countdown = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                // Add alert class when time is less than 1 minute
+                if (timer <= 60 && timer > 0) { // 60 seconds = 1 minute
+                    display.classList.add('alert');
+                }
+
+                if (--timer < 0) {
+                    clearInterval(countdown);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        // Function to automatically submit the quiz when time is up
+        function autoSubmit() {
+            alert("Time's up! The quiz will now be submitted.");
+            checkAnswers();
+        }
+
+        // Initialize the quiz on page load
+        window.onload = function () {
+            renderQuestions(); // Render questions on page load
+            const tenMinutes = 60 * 10, // 10 minutes in seconds
+                  display = document.getElementById('timer');
+            startTimer(tenMinutes, display);
+        };
+
+        // Function to check answers and display the result
+        function checkAnswers() {
+            let score = 0;
+            let totalQuestions = shuffledQuestions.length; // Total number of questions
+
+            shuffledQuestions.forEach((q, index) => { // Iterate over each question
+                const selectedOption = document.querySelector(`input[name="${q.id}"]:checked`);
+                const feedbackDiv = document.getElementById(`feedback-${index + 1}`);
+                
+                if (selectedOption) {
+                    // Get the selected label (A, B, C, D)
+                    const selectedLabel = selectedOption.value;
+                    // Map label to option index
+                    const labelIndex = ['A', 'B', 'C', 'D'].indexOf(selectedLabel);
+                    if (labelIndex !== -1 && q.options[labelIndex].isCorrect) {
+                        score += 1; // Add 1 mark for correct answer
+
+                        // Mark the question link as correct in the Question Map
+                        const questionMapLink = document.querySelector(`.question-map .question-link[href="#question-${index + 1}"]`);
+                        if (questionMapLink) {
+                            questionMapLink.classList.add('correct');
+                            questionMapLink.classList.remove('incorrect', 'attempted');
+                        }
+
+                        // Update Feedback Below the Question
+                        if (feedbackDiv) {
+                            feedbackDiv.textContent = 'Right';
+                            feedbackDiv.classList.add('right');
+                            feedbackDiv.classList.remove('wrong', 'not-attempted');
+                        }
+                    } else {
+                        score -= 0.5; // Deduct 0.5 marks for incorrect answer
+
+                        // Mark the question link as incorrect in the Question Map
+                        const questionMapLink = document.querySelector(`.question-map .question-link[href="#question-${index + 1}"]`);
+                        if (questionMapLink) {
+                            questionMapLink.classList.add('incorrect');
+                            questionMapLink.classList.remove('correct', 'attempted');
+                        }
+
+                        // Update Feedback Below the Question
+                        if (feedbackDiv) {
+                            feedbackDiv.textContent = 'Wrong';
+                            feedbackDiv.classList.add('wrong');
+                            feedbackDiv.classList.remove('right', 'not-attempted');
+                        }
+                    }
+                } else {
+                    // If the question was not answered, mark as not attempted
+                    const questionMapLink = document.querySelector(`.question-map .question-link[href="#question-${index + 1}"]`);
+                    if (questionMapLink) {
+                        // Remove both classes if the question was not answered
+                        questionMapLink.classList.remove('correct', 'incorrect', 'attempted');
+                    }
+
+                    // Update Feedback Below the Question
+                    if (feedbackDiv) {
+                        feedbackDiv.textContent = 'Not Attempted';
+                        feedbackDiv.classList.add('not-attempted');
+                        feedbackDiv.classList.remove('right', 'wrong');
+                    }
+                }
+            });
+
+            // Round the score to one decimal place
+            score = Math.round(score * 10) / 10;
+
+            // Update the result in the Question Map Sidebar
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = `You scored ${score} out of ${totalQuestions}`;
+
+            // Update the result below the questions list
+            const resultDivBelow = document.getElementById('resultBelow');
+            resultDivBelow.textContent = `You scored ${score} out of ${totalQuestions}`;
+
+            // Disable all inputs to prevent changes after submission
+            const inputs = document.querySelectorAll('input[type="radio"]');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+
+            // Disable the submit buttons to prevent multiple submissions
+            const submitButton = document.getElementById('submitBtn');
+            submitButton.disabled = true;
+
+            const submitButtonBelow = document.getElementById('submitBtnBelow');
+            if (submitButtonBelow) {
+                submitButtonBelow.disabled = true;
+            }
+        }
+
+        // Toggle Question Map on small screens
+        const toggleBtn = document.getElementById('toggleQuestionMap');
+        const questionMap = document.getElementById('questionMap');
+
+        toggleBtn.addEventListener('click', () => {
+            questionMap.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
